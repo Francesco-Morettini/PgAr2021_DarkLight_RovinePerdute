@@ -6,11 +6,11 @@ public class Citta {
     private Posizione posizione;
     private ArrayList<Integer> link;
 
-    public Citta(int id, String nome, Posizione posizione, ArrayList<Integer> link) {
+    public Citta(int id, String nome, int x, int y, int z) {
         this.id = id;
         this.nome = nome;
-        this.posizione = posizione;
-        this.link = link;
+        this.posizione = new Posizione(x,y,z);
+        this.link = new ArrayList<Integer>();
     }
     public int getId() {
         return id;
