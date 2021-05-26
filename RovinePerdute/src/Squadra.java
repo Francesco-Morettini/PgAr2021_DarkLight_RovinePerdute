@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Squadra {
 
     private String nome;
@@ -5,10 +7,14 @@ public class Squadra {
     private double carburanteConsumato;
     private Percorso percorso;
 
-    public Squadra(String nome, int tipoVeicolo) {
+    /*
+    0 -> veicolo che consuma sulle coordinate x,y
+    1 -> veicolo che consuma su altezza
+     */
+    public Squadra(String nome, int tipoVeicolo, ArrayList<Citta> citta) {
         setNome(nome);
         setTipoVeicolo(tipoVeicolo);
-        percorso = new Percorso();
+        percorso = new Percorso(citta);
     }
 
     public String getNome() {
@@ -27,14 +33,6 @@ public class Squadra {
         this.tipoVeicolo = tipoVeicolo;
     }
 
-    public double getCarburanteConsumato() {
-        return carburanteConsumato;
-    }
-
-    public void setCarburanteConsumato(double carburanteConsumato) {
-        this.carburanteConsumato = carburanteConsumato;
-    }
-
     public Percorso getPercorso() {
         return percorso;
     }
@@ -42,4 +40,14 @@ public class Squadra {
     public void setPercorso() {
 
     }
+
+    public double getCarburanteConsumato() {
+        return carburanteConsumato;
+    }
+
+    public void setCarburanteConsumato() {
+        this.carburanteConsumato = percorso.creaRotta(tipoVeicolo);
+    }
+
+
 }

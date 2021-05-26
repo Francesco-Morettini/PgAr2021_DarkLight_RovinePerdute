@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class GestioneFile {
 
     private final static String ERRORE_READER = "Errore nell'inizializzazione del reader:";
-    private final static String NOME_FILE_TEST = "RovinePerdute/test_file/PgAr_Map_5.xml";
+    private final static String NOME_FILE_TEST = "RovinePerdute/test_file/PgAr_Map_12.xml";
 
     private ArrayList<Citta> citta;
     private Citta city;
@@ -99,9 +99,9 @@ public class GestioneFile {
 
     }*/
 
-    /*public ArrayList<Citta> getCitta(){
-
-    }*/
+    public ArrayList<Citta> getCitta(){
+        return citta;
+    }
 
     public void stampaCitta(){
 

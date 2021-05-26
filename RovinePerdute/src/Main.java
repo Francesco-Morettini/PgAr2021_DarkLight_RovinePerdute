@@ -4,7 +4,12 @@ public class Main {
 
         GestioneFile file = new GestioneFile();
         file.leggiFile();
-        file.stampaCitta();
+        //file.stampaCitta();
+        Squadra squadra1 = new Squadra("Tonatiuh",0, file.getCitta());
+        Squadra squadra2 = new Squadra("Metztli", 1, file.getCitta());
+        //squadra1.setCarburanteConsumato();
+        squadra2.setCarburanteConsumato();
+        //aggiungere approssimazione distanza in matrice
 
     }
 
