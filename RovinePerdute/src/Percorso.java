@@ -29,6 +29,7 @@ public class Percorso {
     public double creaRotta(int tipoVeicolo){
         generaMat(tipoVeicolo);
         stampaMat();
+        rotta();
         return 0;
     }
 
@@ -93,5 +94,23 @@ public class Percorso {
             }
             System.out.println();
         }
+    }
+    public void rotta()
+    {
+        int n = citta.size();
+        int p[]= new int[citta.size()];
+        boolean v[] = new boolean[citta.size()];
+        double d[]= new double[citta.size()];
+        int m=999999999;
+        for(int i=1;i<n;i++)
+        {
+            d[i]=999999999;
+            v[i]=false;
+            p[i]=0;
+        }
+        d[0]=0;
+        do{
+
+        }while (m==999999999);
     }
 }
