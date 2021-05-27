@@ -30,6 +30,7 @@ public class Percorso {
         generaMat(tipoVeicolo);
         stampaMat();
         rotta();
+        System.out.println("ciao");
         return 0;
     }
 
@@ -97,11 +98,13 @@ public class Percorso {
     }
     public void rotta()
     {
+
         int n = citta.size();
         int p[]= new int[citta.size()];
         boolean v[] = new boolean[citta.size()];
         double d[]= new double[citta.size()];
-        int m=999999999;
+        double m=999999999;
+        int j=0;
         for(int i=1;i<n;i++)
         {
             d[i]=999999999;
@@ -110,7 +113,31 @@ public class Percorso {
         }
         d[0]=0;
         do{
+            m=999999999;
+            for(int i=1;i<n;i++) {
+                System.out.println("ciao");
+                if (v[i] == false)
+                {
+                    if (d[i] <= m) {
+                        m = d[i];
+                        j = i;
+                    }
+                }
+            }
+            if(m!=999999999)
+                v[j]=true;
+            for(int i=1;i<n;i++)
+            {
+                if(mat[i][j]>0) {
+                    if (d[i] > d[j] + mat[i][j]) {
+                        d[i] = d[j] + mat[i][j];
+                        p[i]=j;
+                    }
+                }
+            }
 
         }while (m==999999999);
+        for (int i=1;i<n;i++)
+            System.out.println("da campo base a "+p[i]+ " la distanza è :"+d[i]);
     }
 }
