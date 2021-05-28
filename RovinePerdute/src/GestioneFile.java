@@ -1,13 +1,14 @@
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.*;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class GestioneFile {
 
     private final static String ERRORE_READER = "Errore nell'inizializzazione del reader:";
-    private final static String NOME_FILE_TEST = "RovinePerdute/test_file/PgAr_Map_5.xml";
+    private final static String ERRORE_WRITER = "Errore nell'inizializzazione del writer:";
+    private final static String ERRORE_SCRITTURA_FILE = "Errore nella scrittura del file";
+    private final static String NOME_FILE_OUTPUT = "RovinePerdute/test_file/Routes.xml";
 
     private ArrayList<Citta> citta;
     private Citta city;
@@ -19,7 +20,7 @@ public class GestioneFile {
         citta = new ArrayList<Citta>();
     }
 
-    public void leggiFile(){
+    public void leggiFile(String nomeFile){
 
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -28,7 +29,7 @@ public class GestioneFile {
 
         try {
             xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(NOME_FILE_TEST, new FileInputStream(NOME_FILE_TEST));
+            xmlr = xmlif.createXMLStreamReader(nomeFile, new FileInputStream(nomeFile));
         } catch (Exception e) {
             errore = true;
             System.out.println(ERRORE_READER);
@@ -95,9 +96,64 @@ public class GestioneFile {
 
     }
 
-    /*public void scriviFile(ArrayList<Squadra> squadre){
+    public boolean scriviFile(ArrayList<Squadra> squadre){
 
-    }*/
+            XMLOutputFactory xmlof = null;
+            XMLStreamWriter xmlw = null;
+
+            //inizializzazione del writer con controllo eccezioni
+            try {
+                xmlof = XMLOutputFactory.newInstance();
+                xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(NOME_FILE_OUTPUT), "utf-8");
+                xmlw.writeStartDocument("utf-8", "1.0");
+            } catch (Exception e) {
+                System.out.println(ERRORE_WRITER);
+                System.out.println(e.getMessage());
+                return false;
+            }
+
+            try { // blocco try per raccogliere eccezioni
+                xmlw.writeStartElement( "routes"); // scrittura del tag radice <routes>
+
+                for (int i=0; i<squadre.size(); i++){
+                    generaTagRoute(squadre.get(i), xmlw);
+                }
+
+                xmlw.writeEndElement();//chiudo tag radice </routes>
+
+                xmlw.writeEndDocument();
+
+                xmlw.flush(); // svuota il buffer e procede alla scrittura
+                xmlw.close(); // chiusura del documento e delle risorse impiegate
+
+                return true;
+
+            } catch (Exception e) { // se c’è un errore viene eseguita questa parte
+                System.out.println(ERRORE_SCRITTURA_FILE);
+                System.out.println(e.getMessage());
+                return false;
+            }
+
+    }
+
+    public void generaTagRoute(Squadra squadra, XMLStreamWriter xmlw) throws XMLStreamException {
+
+        xmlw.writeStartElement("route"); // scrittura del tag <route> ...
+        xmlw.writeAttribute("team" , squadra.getNome()); //... con attributo team = nome squadra
+        xmlw.writeAttribute("cost" , Double.toString(squadra.getCarburanteConsumato())); //... con attributo cost = carburante consumato
+        xmlw.writeAttribute("cities" , Integer.toString(squadra.getPercorso().getRotta().size())); //... con attributo cities = numero città toccate
+
+        for (int i=0; i<squadra.getPercorso().getRotta().size();i++){
+            xmlw.writeStartElement("city");
+            xmlw.writeAttribute("id" , Integer.toString(squadra.getPercorso().getRotta().get(i).getId()));
+            xmlw.writeAttribute("name" , squadra.getPercorso().getRotta().get(i).getNome());
+        }
+
+        xmlw.writeEndElement();//chiudo tag </route>
+
+    }
+
+
 
     public ArrayList<Citta> getCitta(){
         return citta;
