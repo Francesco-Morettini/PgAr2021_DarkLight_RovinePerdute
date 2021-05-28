@@ -101,63 +101,44 @@ public class Percorso {
 
         int n = citta.size();
         int p[]= new int[citta.size()];
-        boolean v[] = new boolean[citta.size()];
         double d[]= new double[citta.size()];
         double m,carburante=0;
         int j=0;
         for(int i=0;i<n;i++)
         {
-            d[i]=infinito;
-            v[i]=false;
-            p[i]=-1;
+            d[i]=infinito;//setto ad infinito la distanza
+            p[i]=-1;// setto le celle per la rotta a -1
         }
-       // d[0]=0;
-        do{
-            m=infinito;
-            for(int i=0;i<n;i++) {
-                if (!v[i])
-                {
-                    if (d[i] <= m) {
-                        m = d[i];
-                        j=i;
-                    }
-                }
-            }
-            if(m!=infinito)
-                v[j]=true;
             for(int i=0;i<n-1;i++)
             {
                 for(j=i;j<n;j++)
-                if(mat[i][j]>0) {
-                    if (d[i] > mat[i][j]) {
-                        d[i] = mat[i][j];
-                        p[i]=j;
+                if(mat[i][j]>0) {//se la distanza è >0
+                    if (d[i] > mat[i][j]) {//se la distanza del arco è minore di quella gia settata
+                        d[i] = mat[i][j];// setto la distanza del arco
+                        p[i]=j;// scrivo l'id del nodo per cui passo
                     }
                 }
-                i=p[i]-1;
-
+                if(p[i]!=-1)//se ho settato una posizione in p[i] allora
+                    i=p[i]-1;// setto i come p[i] -1 cosi non torno indietro ma vado avanti nella mat
             }
-
-        }while (m==infinito);
         int t=0;
         for(int i=0 ; i<n; i++)
             if(d[i]<infinito) {
-                carburante += d[i];
+                carburante += d[i];//sommo tutte le distanze e trovo il carburante richiesto
                         t++;
             };
             j=0;
             r=new int [t];
         for(int i=0 ; i<n; i++)
-            if(p[i]>0)
+            if(p[i]>0)//se la p[i]>0 ovvero se è presente un nodo a cui andare
             {
-               r[j]=p[i];
+               r[j]=p[i];//inserisco il valore cosi da ottenere il percorso
                j++;
             }
-        rotta.add(citta.get(0));
+        rotta.add(citta.get(0));//setto la prima citta "punto di partenza" della rotta
         for(int i=0;i<r.length;i++)
         {
-            rotta.add(citta.get(r[i]));
-
+            rotta.add(citta.get(r[i]));//setto la rotta con la citta contenuta in r[i]
         }
         return carburante;
 }
