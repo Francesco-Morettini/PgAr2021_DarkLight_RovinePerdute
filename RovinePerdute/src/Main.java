@@ -10,6 +10,7 @@ public class Main {
         //squadra1.setCarburanteConsumato();
         squadra2.setCarburanteConsumato();
         //aggiungere approssimazione distanza in matrice
+       // System.out.println(squadra2.getCarburanteConsumato()+"  "+ squadra2.getPercorso().getRotta());
 
     }
 

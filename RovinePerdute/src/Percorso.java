@@ -4,10 +4,12 @@ public class Percorso {
     private ArrayList<Citta> citta;
     private ArrayList<Citta> rotta;
     private double mat[][];
-
+    private final static int infinito=999999999;
+    private int r[];
     public Percorso(ArrayList<Citta> citta) {
         this.citta = citta;
         this.mat = new double[citta.size()][citta.size()];
+        this.rotta= new ArrayList<Citta>();
     }
 
     public ArrayList<Citta> getCitta() {
@@ -28,10 +30,8 @@ public class Percorso {
 
     public double creaRotta(int tipoVeicolo){
         generaMat(tipoVeicolo);
-        stampaMat();
-        rotta();
-        System.out.println("ciao");
-        return 0;
+       // stampaMat();
+        return rotta();
     }
 
     public void generaMat(int tipoVeicolo){
@@ -96,48 +96,71 @@ public class Percorso {
             System.out.println();
         }
     }
-    public void rotta()
+    public double rotta()
     {
 
         int n = citta.size();
         int p[]= new int[citta.size()];
         boolean v[] = new boolean[citta.size()];
         double d[]= new double[citta.size()];
-        double m=999999999;
+        double m,carburante=0;
         int j=0;
-        for(int i=1;i<n;i++)
+        for(int i=0;i<n;i++)
         {
-            d[i]=999999999;
+            d[i]=infinito;
             v[i]=false;
-            p[i]=0;
+            p[i]=-1;
         }
-        d[0]=0;
+       // d[0]=0;
         do{
-            m=999999999;
-            for(int i=1;i<n;i++) {
-                System.out.println("ciao");
-                if (v[i] == false)
+            m=infinito;
+            for(int i=0;i<n;i++) {
+                if (!v[i])
                 {
                     if (d[i] <= m) {
                         m = d[i];
-                        j = i;
+                        j=i;
                     }
                 }
             }
-            if(m!=999999999)
+            if(m!=infinito)
                 v[j]=true;
-            for(int i=1;i<n;i++)
+            for(int i=0;i<n-1;i++)
             {
+                for(j=i;j<n;j++)
                 if(mat[i][j]>0) {
-                    if (d[i] > d[j] + mat[i][j]) {
-                        d[i] = d[j] + mat[i][j];
+                    if (d[i] > mat[i][j]) {
+                        d[i] = mat[i][j];
                         p[i]=j;
                     }
                 }
+                i=p[i]-1;
+
             }
 
-        }while (m==999999999);
-        for (int i=1;i<n;i++)
-            System.out.println("da campo base a "+p[i]+ " la distanza è :"+d[i]);
-    }
+        }while (m==infinito);
+        int t=0;
+        for(int i=0 ; i<n; i++)
+            if(d[i]<infinito) {
+                carburante += d[i];
+                        t++;
+            };
+            j=0;
+            r=new int [t];
+        for(int i=0 ; i<n; i++)
+            if(p[i]>0)
+            {
+               r[j]=p[i];
+               j++;
+            }
+        rotta.add(citta.get(0));
+        for(int i=0;i<r.length;i++)
+        {
+            rotta.add(citta.get(r[i]));
+
+        }
+        return carburante;
+}
+
+
 }
