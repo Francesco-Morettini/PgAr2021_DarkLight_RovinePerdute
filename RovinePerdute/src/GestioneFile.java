@@ -3,6 +3,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+
+/**
+ * Classe che gestisce lettura e scrittura dei file XML.
+ */
 public class GestioneFile {
 
     private final static String ERRORE_READER = "Errore nell'inizializzazione del reader:";
@@ -10,16 +14,26 @@ public class GestioneFile {
     private final static String ERRORE_SCRITTURA_FILE = "Errore nella scrittura del file";
     private final static String NOME_FILE_OUTPUT = "RovinePerdute/test_file/Routes.xml";
 
-    private ArrayList<Citta> citta;
-    private Citta city;
-    private int id, numeroCitta, x, y, z;
-    private Posizione posizione;
-    private String nome;
+    private ArrayList<Citta> citta; //arraylist contenente oggetti di classe Citta creati con i dati letti dal file XML
+    private Citta city; //oggetto di classe Citta
+    private int id, numeroCitta, x, y, z; //id delle città lette dal file, numero città totali da leggere, coordinate delle città lette
+    private Posizione posizione; //oggetto di classe Posizione
+    private String nome; //nome delle città lette
 
+    /**
+     * Costruttore: inizializza ArrayList citta.
+     */
     public GestioneFile(){
         citta = new ArrayList<Citta>();
     }
 
+
+    /**
+     * Metodo per la lettura del file XML: <br>
+     * crea un oggetto city passando i dati letti e lo aggiunge nell'arraylist citta
+     *
+     * @param nomeFile
+     */
     public void leggiFile(String nomeFile){
 
         XMLInputFactory xmlif = null;
@@ -27,6 +41,7 @@ public class GestioneFile {
 
         boolean errore = false;
 
+        //inizializzazione del reader con controllo eccezioni
         try {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(nomeFile, new FileInputStream(nomeFile));
@@ -53,7 +68,7 @@ public class GestioneFile {
 
                                     break;
 
-                                case "city":
+                                case "city": //assegno alle variabili gli attributi letti e creo un oggetto di classe Citta
 
                                     id = Integer.parseInt(xmlr.getAttributeValue(0));
                                     nome = xmlr.getAttributeValue(1);
@@ -65,7 +80,7 @@ public class GestioneFile {
 
                                     break;
 
-                                case "link":
+                                case "link": //aggiungo alla city letta i vari link alle città connesse
 
                                     city.getLink().add(Integer.parseInt(xmlr.getAttributeValue(0)));
 
@@ -75,7 +90,7 @@ public class GestioneFile {
 
                             break;
 
-                        case XMLStreamConstants.END_ELEMENT:
+                        case XMLStreamConstants.END_ELEMENT: //aggiungo oggetto city ad arraylist citta
 
                             if (xmlr.getLocalName().equals("city"))
 
@@ -96,6 +111,12 @@ public class GestioneFile {
 
     }
 
+
+    /**
+     * Metodo per la scrittura del documento finale Routes.xml
+     * @param squadre
+     * @return true se scrittura avviene correttamente, false se c'è qualche errore
+     */
     public boolean scriviFile(ArrayList<Squadra> squadre){
 
             XMLOutputFactory xmlof = null;
@@ -115,13 +136,16 @@ public class GestioneFile {
             try { // blocco try per raccogliere eccezioni
                 xmlw.writeStartElement( "routes"); // scrittura del tag radice <routes>
 
+                /*
+                Scrittura delle rotte di ogni squadra
+                 */
                 for (int i=0; i<squadre.size(); i++){
                     generaTagRoute(squadre.get(i), xmlw);
                 }
 
                 xmlw.writeEndElement();//chiudo tag radice </routes>
 
-                xmlw.writeEndDocument();
+                xmlw.writeEndDocument(); //chiusura documento
 
                 xmlw.flush(); // svuota il buffer e procede alla scrittura
                 xmlw.close(); // chiusura del documento e delle risorse impiegate
@@ -136,6 +160,13 @@ public class GestioneFile {
 
     }
 
+
+    /**
+     * Metodo che genera tag <route> per la squadra passata per parametro.
+     * @param squadra
+     * @param xmlw
+     * @throws XMLStreamException
+     */
     public void generaTagRoute(Squadra squadra, XMLStreamWriter xmlw) throws XMLStreamException {
 
         xmlw.writeStartElement("route"); // scrittura del tag <route> ...
@@ -143,8 +174,11 @@ public class GestioneFile {
         xmlw.writeAttribute("cost" , Double.toString(squadra.getCarburanteConsumato())); //... con attributo cost = carburante consumato
         xmlw.writeAttribute("cities" , Integer.toString(squadra.getPercorso().getRotta().size())); //... con attributo cities = numero città toccate
 
+        /*
+        scrive in ordine ogni città toccata con id e nome come attributi
+         */
         for (int i=0; i<squadra.getPercorso().getRotta().size();i++){
-            xmlw.writeStartElement("city");
+            xmlw.writeEmptyElement("city");
             xmlw.writeAttribute("id" , Integer.toString(squadra.getPercorso().getRotta().get(i).getId()));
             xmlw.writeAttribute("name" , squadra.getPercorso().getRotta().get(i).getNome());
         }
@@ -154,11 +188,18 @@ public class GestioneFile {
     }
 
 
-
+    /**
+     * Metodo che ritorna l'arraylist citta
+     * @return citta
+     */
     public ArrayList<Citta> getCitta(){
         return citta;
     }
 
+
+    /**
+     * Metodo che stampa tutti gli attributi di ogni città
+     */
     public void stampaCitta(){
 
         for (int i=0; i<citta.size(); i++){

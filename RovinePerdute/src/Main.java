@@ -49,7 +49,11 @@ public class Main {
             squadre.get(i).setCarburanteConsumato();
         }
 
-        file.scriviFile(squadre);
+        if (file.scriviFile(squadre)){
+            System.out.println("Il file Routes è stato creato!");
+        }else{
+            System.out.println("Errore nella creazione del file Routes");
+        }
 
     }
 
